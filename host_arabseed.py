@@ -153,7 +153,7 @@ class TSIPHost(TSCBaseHostClass):
             for ep in episodes:
                 self.addVideo({'import': cItem.get('import', ''),'title': ep['title'],'url': ep['url'],'icon': cItem.get('icon', ''),'desc': '','EPG': True,'hst': 'tshost'})
         else:
-            self.addVideo({'import': cItem.get('import', ''),'title': cItem['title'],'url': cItem['url'],'icon': cItem.get('icon', ''),'desc': '','EPG': True,'hst': 'tshost'})	
+            self.addVideo({'import': cItem.get('import', ''),'title': cItem['title'],'url': cItem['url'],'icon': cItem.get('icon', ''),'desc': '','EPG': True,'hst': 'tshost'})
     def SearchResult(self,str_ch,page,extra):
         elms = []
         url = self.MAIN_URL+'/find/?find='+str_ch+'&offset='+str(page)
