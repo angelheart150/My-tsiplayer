@@ -1,10 +1,9 @@
-
+##setup command=wget -q "--no-check-certificate" https://github.com/angelheart150/My-tsiplayer/raw/main/install-tsiplayer-update-hosts.sh -O - | /bin/sh
 #!/bin/sh
 ##############################################################
 # TSIPlayer Auto Installer from GitHub Repo by Mohamed Elsafty
-# Version: 1.0
-# Description: Download latest host_*.py files and back up old ones
-#setup command=wget -q "--no-check-certificate" https://github.com/angelheart150/My-tsiplayer/raw/main/install-tsiplayer-update-hosts.sh -O - | /bin/sh
+# Version: 1.1
+# Description: Update host_*.py files and keep latest .bak only
 ##############################################################
 
 echo ''
@@ -35,17 +34,25 @@ if [ ! -f "$TMP_DIR/main.zip" ]; then
     exit 1
 fi
 
-echo "> Extracting new files to /usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/tsiplayer ..."
+echo "> Extracting new files to $DEST_DIR ..."
 unzip -q "$TMP_DIR/main.zip" -d "$TMP_DIR"
 
 # Backup and replace host_*.py files
 for file in "$TMP_DIR"/My-tsiplayer-main/host_*.py; do
     filename=$(basename "$file")
     destfile="$DEST_DIR/$filename"
+    base="$DEST_DIR/$filename"
+
+    # Delete old .bak versions
+    echo "Checking for older backups of $filename..."
+    find "$DEST_DIR" -maxdepth 1 -type f -name "$filename.*.bak" ! -name "$filename.$DATE.bak" -exec rm -f {} \;
+
+    # Backup current version if exists
     if [ -f "$destfile" ]; then
         echo "Backing up $filename to $filename.$DATE.bak"
         mv "$destfile" "$destfile.$DATE.bak"
     fi
+
     echo "Installing $filename"
     cp -f "$file" "$DEST_DIR/"
     COUNT=$((COUNT+1))
