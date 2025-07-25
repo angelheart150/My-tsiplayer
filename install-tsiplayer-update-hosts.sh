@@ -35,7 +35,7 @@ if [ ! -f "$TMP_DIR/main.zip" ]; then
     exit 1
 fi
 
-echo "> Extracting..."
+echo "> Extracting new files to /usr/lib/enigma2/python/Plugins/Extensions/IPTVPlayer/tsiplayer ..."
 unzip -q "$TMP_DIR/main.zip" -d "$TMP_DIR"
 
 # Backup and replace host_*.py files
