@@ -237,7 +237,24 @@ class TSIPHost(TSCBaseHostClass):
         desc = self.add_menu(cItem,'','DetailsBox">(.*?)<ul','','desc',Desc=Desc)
         if desc =='': desc = cItem.get('desc','')
         return [{'title':cItem['title'], 'text': desc, 'images':[{'title':'', 'url':cItem.get('icon','')}], 'other_info':{}}]
-    def get_links(self,cItem):
-        local = [('vidlo.us','LoDyTo','0'),]
-        result = self.add_menu(cItem,'ServersList">(.*?)</ul','<li.*?data-embed="(.*?)".*?>(.*?)</li>','','serv',local=local)
-        return result[1]
+  #  def get_links(self,cItem):
+   #     local = [('vidlo.us','LoDyTo','0'),]
+    #    result = self.add_menu(cItem,'ServersList">(.*?)</ul','<li.*?data-embed="(.*?)".*?>(.*?)</li>','','serv',local=local)
+     #   return result[1]
+    def get_links(self, cItem):
+        url = cItem.get('url', '')
+        sts, data = self.getPage(url)
+        if not sts:
+            return []
+        links = []
+        servers = re.findall(r'onclick="SwitchServer\(this,\s*\'([^\']+)\'\)".*?>([^<]+)<',data, re.S)
+        if servers:
+            for srv_url, srv_name in servers:
+                srv_url = self.std_url(srv_url)
+                links.append({'name': srv_name.strip(),'url': srv_url,'need_resolve': 1})
+        else:
+            tmp = re.findall(r'<li[^>]+data-embed=["\']([^"\']+)["\'][^>]*>([^<]+)<', data)
+            for srv_url, srv_name in tmp:
+                srv_url = self.std_url(srv_url)
+                links.append({'name': srv_name.strip(),'url': srv_url,'need_resolve': 1})
+        return links
