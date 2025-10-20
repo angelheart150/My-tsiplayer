@@ -30,7 +30,9 @@ class TSIPHost(TSCBaseHostClass):
         TSCBaseHostClass.__init__(self,{})
         self.MAIN_URL = getinfo()['host']
     def showmenu(self,cItem):
-        TAB = [('مسلسلات','','10',0),('أفلام','','10',1),('برامج و حفلات','/category/البرامج-و-حفلات-tv/','20',''),('أغاني','','10',2),('الممثلين','/الممثلين/','20',''),('المضاف حديثاً','/','20','newly'),]
+        TAB = [('مسلسلات','','10',0),('أفلام','','10',1),('برامج و حفلات','/category/البرامج-و-حفلات-tv/','20',''),('أغاني','','10',2),
+        # ('الممثلين','/الممثلين/','20',''),
+        ('المضاف حديثاً','/','20','newly'),]
         self.add_menu(cItem,'','','','','',TAB=TAB,search=False)
         self.addDir({'import':cItem['import'],'category' :'host2','title':T('Search')  ,'icon':'https://i.ibb.co/dQg0hSG/search.png','mode':'50'})
     def showmenu1(self,cItem):
