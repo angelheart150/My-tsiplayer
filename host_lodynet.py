@@ -549,21 +549,26 @@ class TSIPHost(TSCBaseHostClass):
         if desc =='': desc = cItem.get('desc','')
         return [{'title':cItem['title'], 'text': desc, 'images':[{'title':'', 'url':cItem.get('icon','')}], 'other_info':{}}]
     def get_links(self, cItem):
+        printDBG("LodyNet.get_links --------------------------------")
         url = cItem.get('url', '')
         sts, data = self.getPage(url)
         if not sts:
             return []
         links = []
-        servers = re.findall(r'onclick="SwitchServer\(this,\s*\'([^\']+)\'\)".*?>([^<]+)<',data, re.S)
+        servers = re.findall(r"SwitchServer\(this,\s*'([^']+)'\).*?>([^<]+)<", data)
         if servers:
             for srv_url, srv_name in servers:
                 srv_url = self.std_url(srv_url)
-                links.append({'name': srv_name.strip(),'url': srv_url,'need_resolve': 1})
+                srv_name = self.cleanHtmlStr(srv_name).strip()
+                links.append({'name': srv_name, 'url': srv_url, 'need_resolve': 1})
+                printDBG("  >> Found server: %s (%s)" % (srv_name, srv_url))
         else:
-            tmp = re.findall(r'<li[^>]+data-embed=["\']([^"\']+)["\'][^>]*>([^<]+)<', data)
-            for srv_url, srv_name in tmp:
+            old_servers = re.findall(r'<li[^>]+data-embed=["\']([^"\']+)["\'][^>]*>([^<]+)<', data)
+            for srv_url, srv_name in old_servers:
                 srv_url = self.std_url(srv_url)
-                links.append({'name': srv_name.strip(),'url': srv_url,'need_resolve': 1})
+                srv_name = self.cleanHtmlStr(srv_name).strip()
+                links.append({'name': srv_name, 'url': srv_url, 'need_resolve': 1})
+                printDBG("  >> Found old server: %s (%s)" % (srv_name, srv_url))
         return links
     def start(self, cItem):
         mode = cItem.get('mode', None)
