@@ -18,7 +18,7 @@ def getinfo():
     if hst_!='': hst = hst_
     info_['host']= hst
     info_['name']=name
-    info_['version']='4.0 20/10/2025'
+    info_['version']='5.0 25/10/2025'
     info_['dev']='RGYSoft + Angel_heart'
     info_['cat_id']='21'
     info_['desc']='افلام و مسلسلات وبرامج وحفلات وكرتون وأغاني وممثلين'
@@ -131,9 +131,9 @@ class TSIPHost(TSCBaseHostClass):
             if isinstance(js, list) and len(js) > 1:
                 for item in js[1]:
                     title = item.get("Title", "").strip()
-                    link  = item.get("Url", "").replace("\\/", "/")
+                    link = item.get("Url", "").replace("\\/", "/")
                     cover = item.get("Cover", "").replace("\\/", "/")
-                    cat   = item.get("Category", "").strip()
+                    cat = item.get("Category", "").strip()
                     if not link.startswith("http"):
                         link = self.MAIN_URL.rstrip('/') + '/' + link.lstrip('/')
                     params = {'title': title,'url': link,'icon': cover,'desc': cat,'section': section,'category': 'host2','hst': 'tshost','import': 'from Plugins.Extensions.IPTVPlayer.tsiplayer.host_lodynet import ',}
@@ -147,7 +147,7 @@ class TSIPHost(TSCBaseHostClass):
                             folder = {'title': tscolor('\c0090??00') + title,'category': 'host2','url': link,'icon': cover,'desc': 'حلقات المسلسل','mode': '20','sub_mode': 'episodes','good_for_fav': True,'hst': 'tshost','import': 'from Plugins.Extensions.IPTVPlayer.tsiplayer.host_lodynet import ','episodes': episodes}
                             results.append(folder)
                             continue
-                    params.update({'mode': '20','type_': 'video'})
+                    params.update({'mode': '20', 'type_': 'video'})
                     results.append(params)
         except Exception as e:
             printDBG("SearchAll exception: %s" % str(e))
@@ -263,19 +263,44 @@ class TSIPHost(TSCBaseHostClass):
                 else:
                     self.addVideo({'import': cItem.get('import'),'title': title.strip(),'url': item_url,'icon': icon,'desc': desc,'good_for_fav': True,'hst': 'tshost'})
                 items_added += 1
-        more_match = re.search(r'onclick="GetMoreCategory\(\'(.*?)\',\s*\'(.*?)\'\)"', data)
-        if more_match:
-            pick_up_order = more_match.group(1)
-            pick_up_id = more_match.group(2)
-            parent_match = re.search(r"DataPosting\.append\('parent',\s*'(\d+)'\)", data)
-            parent_id = parent_match.group(1) if parent_match else ''
+        more_match = False
+        pick_up_order = ''
+        pick_up_id = ''
+        more_match1 = re.search(r'onclick="[^"]*GetMoreCategory\(\'([^\']+)\',\s*\'([^\']+)\'\)"', data)
+        if more_match1:
+            pick_up_order = more_match1.group(1)
+            pick_up_id = more_match1.group(2)
+            more_match = True
+            printDBG(f"تم اكتشاف زر تحميل المزيد - النمط 1: order={pick_up_order}, id={pick_up_id}")
+        if not more_match:
+            more_match2 = re.search(r'onclick="[^"]*GetMoreCategory\(\'([^\']+)\',\s*\'([^\']+)\'\)[^"]*"', data)
+            if more_match2:
+                pick_up_order = more_match2.group(1)
+                pick_up_id = more_match2.group(2)
+                more_match = True
+                printDBG(f"تم اكتشاف زر تحميل المزيد - النمط 2: order={pick_up_order}, id={pick_up_id}")
+        if more_match and pick_up_order and pick_up_id:
+            parent_id = ''
+            parent_match1 = re.search(r"DataPosting\.append\('parent',\s*'(\d+)'\)", data)
+            if parent_match1:
+                parent_id = parent_match1.group(1)
+                printDBG(f"تم اكتشاف parent_id - النمط 1: {parent_id}")
+            if not parent_id:
+                parent_match2 = re.search(r"append\('parent',\s*'(\d+)'\)", data)
+                if parent_match2:
+                    parent_id = parent_match2.group(1)
+                    printDBG(f"تم اكتشاف parent_id - النمط 2: {parent_id}")
             type_match = re.search(r"DataPosting\.append\('type',\s*'([^']+)'\)", data)
             taxonomy_match = re.search(r"DataPosting\.append\('taxonomy',\s*'([^']+)'\)", data)
             data_type = type_match.group(1) if type_match else 'Category'
             taxonomy = taxonomy_match.group(1) if taxonomy_match else 'category'
-            if pick_up_id and parent_id:
+            if parent_id:
                 self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'تحميل المزيد','url': url,'icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': '22','pick_up_order': pick_up_order,'pick_up_id': pick_up_id,'parent_id': parent_id,'data_type': data_type,'taxonomy': taxonomy})
+                printDBG(f"تم إضافة زر تحميل المزيد: order={pick_up_order}, id={pick_up_id}, parent={parent_id}")
+            else:
+                printDBG("لم يتم العثور على parent_id، لا يمكن إضافة زر تحميل المزيد")
         else:
+            printDBG("لم يتم العثور على زر تحميل المزيد في الصفحة")
             next_match = re.search(r'class="next page-numbers".*?href="([^"]+)"', data)
             if next_match:
                 next_url = next_match.group(1)
@@ -288,19 +313,7 @@ class TSIPHost(TSCBaseHostClass):
                 if is_newly_section:
                     next_page = page + 1
                     next_url = self.MAIN_URL + '/page/' + str(next_page) + '/'
-                    self.addDir({
-                        'import': cItem.get('import'),
-                        'category': 'host2', 
-                        'title': tscolor('\c00????20') + 'Page (' + str(next_page) + ')',
-                        'url': next_url,
-                        'icon': '',
-                        'desc': tscolor('\c00????20') + 'الانتقال إلى الصفحة ' + str(next_page),
-                        'good_for_fav': False,
-                        'hst': 'tshost',
-                        'mode': '20',
-                        'page': next_page,
-                        'sub_mode': 'newly'
-                    })
+                    self.addDir({'import': cItem.get('import'),'category': 'host2', 'title': tscolor('\c00????20') + 'Page (' + str(next_page) + ')','url': next_url,'icon': '','desc': tscolor('\c00????20') + 'الانتقال إلى الصفحة ' + str(next_page),'good_for_fav': False,'hst': 'tshost','mode': '20','page': next_page,'sub_mode': 'newly'})
     def determine_content_type(self, title, url=''):
         title_lower = title.lower()
         url_lower = url.lower() if url else ''
@@ -364,69 +377,69 @@ class TSIPHost(TSCBaseHostClass):
             return
         API_URL = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestMoreCategory.php"
         try:
-            post_data = {"order": pick_up_order,"parent": parent_id,"type": data_type,"taxonomy": taxonomy,"id": pick_up_id}
-            printDBG(f"طلب تحميل المزيد: {post_data}")
-            headers = {"User-Agent": "Mozilla/5.0","X-Requested-With": "XMLHttpRequest","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
-            response = requests.post(API_URL, data=post_data, headers=headers, verify=False, timeout=30)
-            if response.status_code == 200:
+            post_data = urllib.parse.urlencode({"order": pick_up_order,"parent": parent_id,"type": data_type,"taxonomy": taxonomy,"id": pick_up_id}).encode('utf-8')
+            printDBG(f"طلب تحميل المزيد: order={pick_up_order}, parent={parent_id}, type={data_type}, taxonomy={taxonomy}, id={pick_up_id}")
+            headers = {"User-Agent": "Mozilla/5.0","X-Requested-With": "XMLHttpRequest","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            }
+            req = urllib.request.Request(API_URL, data=post_data, headers=headers)
+            response = urllib.request.urlopen(req, timeout=30)
+            response_text = response.read().decode('utf-8')
+            if response_text:
                 try:
-                    response_text = response.text.strip()
-                    if not response_text:
-                        self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'استجابة فارغة من الخادم','url': '','icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': ''})
-                        return
                     items = json.loads(response_text)
                     if isinstance(items, list) and items:
                         valid_items = []
                         for item in items:
                             if not isinstance(item, dict):
                                 continue
-                            title = item.get("name", "")
-                            url = item.get("url", "")
-                            image = item.get("cover", "")
-                            if any(x in str(value) for value in [title, url, image] for x in ["+ CategoryItem.", "CategoryItem."]):
-                                printDBG("تخطي عنصر غير صالح: " + str(item))
-                                continue
-                            if not title or not url:
+                            if 'name' not in item or 'url' not in item:
                                 continue
                             valid_items.append(item)
                         for item in valid_items:
                             title = item.get("name", "")
-                            url = item.get("url", "")
+                            url_path = item.get("url", "")
                             image = item.get("cover", "")
-                            if url and not url.startswith('http'):
-                                if url.startswith('/'):
-                                    url = self.MAIN_URL + url
-                                else:
-                                    url = self.MAIN_URL + '/' + url
-                            icon = self.fix_image_url(self.std_url(image)) if image and not ("CategoryItem." in image) else ''
                             ribbon = item.get("ribbon", "")
                             ago = item.get("ago", "")
                             episode = item.get("episode", "")
+                            item_id = item.get("ID", "")
+                            if url_path and not url_path.startswith('http'):
+                                if url_path.startswith('/'):
+                                    url = self.MAIN_URL + url_path
+                                else:
+                                    url = self.MAIN_URL + '/' + url_path
+                            else:
+                                url = url_path
+                            icon = self.fix_image_url(self.std_url(image)) if image else ''
                             desc_parts = []
-                            if ribbon: desc_parts.append(tscolor('\c00????00') + 'النوع: ' + tscolor('\c00????FF') + ribbon)
-                            if ago: desc_parts.append(tscolor('\c00????00') + 'وقت النشر: ' + tscolor('\c00????FF') + ago)
-                            if episode: desc_parts.append(tscolor('\c00????00') + 'الحلقة: ' + tscolor('\c00????FF') + str(episode))
-                            desc = tscolor('\c00????00') + '\n'.join(desc_parts) if desc_parts else ''
-                            content_type = self.determine_content_type(title, cItem.get('url', ''))
+                            if ribbon: 
+                                desc_parts.append(tscolor('\c00????00') + 'النوع: ' + tscolor('\c00????FF') + ribbon)
+                            if ago: 
+                                desc_parts.append(tscolor('\c00????00') + 'وقت النشر: ' + tscolor('\c00????FF') + ago)
+                            if episode: 
+                                desc_parts.append(tscolor('\c00????00') + 'الحلقة: ' + tscolor('\c00????FF') + str(episode))
+                            desc = '\n'.join(desc_parts) if desc_parts else ''
+                            content_type = self.determine_content_type(title, url)
                             if is_episodes or content_type == 'episode' or content_type == 'movie':
                                 self.addVideo({'import': cItem.get('import'),'title': title,'url': url,'icon': icon,'desc': desc,'good_for_fav': True,'hst': 'tshost'})
                             else:
                                 self.addDir({'import': cItem.get('import'),'category': 'host2','title': title,'url': url,'icon': icon,'desc': desc,'good_for_fav': True,'hst': 'tshost','mode': '21'})
-                        if len(valid_items) >= 20:
+                        if len(valid_items) >= 20 and valid_items[-1].get("ID"):
                             last_item = valid_items[-1]
                             new_pick_up_id = str(last_item.get("ID", ""))
                             if new_pick_up_id and new_pick_up_id != pick_up_id:
                                 self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'تحميل المزيد','url': cItem.get('url', ''),'icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': '22','pick_up_order': pick_up_order,'pick_up_id': new_pick_up_id,'parent_id': parent_id,'data_type': data_type,'taxonomy': taxonomy,'is_episodes': is_episodes})
-                        elif not valid_items:
-                            self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'لا توجد عناصر إضافية','url': '','icon': '','desc': 'لا توجد عناصر إضافية للعرض','good_for_fav': False,'hst': 'tshost','mode': ''})
                     else:
                         self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'لا توجد عناصر إضافية','url': '','icon': '','desc': 'الاستجابة فارغة أو غير صالحة','good_for_fav': False,'hst': 'tshost','mode': ''})
                 except Exception as e:
                     printDBG("Error parsing JSON: " + str(e))
-                    printDBG("Response content: " + response.text)
+                    printDBG("Response content: " + response_text)
                     self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'خطأ في تنسيق البيانات','url': '','icon': '','desc': str(e),'good_for_fav': False,'hst': 'tshost','mode': ''})
             else:
-                self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'فشل الاتصال: ' + str(response.status_code),'url': '','icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': ''})
+                self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'استجابة فارغة من الخادم','url': '','icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': ''})
+        except urllib.error.URLError as e:
+            printDBG("URL Error in load_more: " + str(e))
+            self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'خطأ في الاتصال','url': '','icon': '','desc': str(e),'good_for_fav': False,'hst': 'tshost','mode': ''})
         except Exception as e:
             printDBG("Error in load_more: " + str(e))
             self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'خطأ في النظام','url': '','icon': '','desc': str(e),'good_for_fav': False,'hst': 'tshost','mode': ''})
@@ -524,16 +537,16 @@ class TSIPHost(TSCBaseHostClass):
                 items_added += 1
         if items_added == 0:
             self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'لا توجد حلقات متاحة','url': '','icon': '','desc': 'لا توجد حلقات متاحة لهذا المسلسل حالياً.\nقد يكون السبب:\n- الحلقات غير متوفرة بعد\n- المشكلة مؤقتة من الموقع\n- المسلسل قديم ولم يعد متاحاً','good_for_fav': False,'hst': 'tshost','mode': ''})
-        more_match = re.search(r'onclick="GetMoreCategory\(\'(.*?)\',\s*\'(.*?)\'\)"', data)
+        more_match = re.search(r'<span id="ItemMoreBtn"[^>]*onclick="[^"]*GetMoreCategory\(\'([^\']+)\',\s*\'([^\']+)\'\)"', data)
         if more_match:
             pick_up_order = more_match.group(1)
             pick_up_id = more_match.group(2)
             parent_match = re.search(r"DataPosting\.append\('parent',\s*'(\d+)'\)", data)
             parent_id = parent_match.group(1) if parent_match else ''
             if pick_up_id and parent_id:
-                self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'تحميل المزيد من الحلقات','url': url,'icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': '22', 'pick_up_order': pick_up_order,'pick_up_id': pick_up_id,'parent_id': parent_id,'is_episodes': True })
+                self.addDir({'import': cItem.get('import'),'category': 'host2','title': tscolor('\c00????20') + 'تحميل المزيد من الحلقات','url': url,'icon': '','desc': '','good_for_fav': False,'hst': 'tshost','mode': '22','pick_up_order': pick_up_order,'pick_up_id': pick_up_id,'parent_id': parent_id,'data_type': 'Category','taxonomy': 'category','is_episodes': True})
         else:
-            next_match = re.search(r'class="next page-numbers".*?href="([^"]+)"', data)
+            next_match = re.search(r'class="nextpage-numbers".*?href="([^"]+)"', data)
             if next_match:
                 next_url = next_match.group(1)
                 if not next_url.startswith('http'):
