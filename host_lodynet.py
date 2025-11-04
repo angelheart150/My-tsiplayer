@@ -8,7 +8,7 @@ try:
     from urllib.parse import quote_plus  # Python 3
 except ImportError:
     from urllib import quote_plus        # Python 2
-#################################################
+################################################################   20251104
 def getinfo():
     info_={}
     name='Lodynet'
@@ -18,7 +18,7 @@ def getinfo():
     if hst_!='': hst = hst_
     info_['host']= hst
     info_['name']=name
-    info_['version']='5.0 25/10/2025'
+    info_['version']='6.0 04/11/2025'
     info_['dev']='RGYSoft + Angel_heart'
     info_['cat_id']='21'
     info_['desc']='افلام و مسلسلات وبرامج وحفلات وكرتون وأغاني وممثلين'
@@ -29,9 +29,10 @@ class TSIPHost(TSCBaseHostClass):
     def __init__(self):
         TSCBaseHostClass.__init__(self,{})
         self.MAIN_URL = getinfo()['host']
+        self.USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        self.defaultParams = {'header': {'User-Agent': self.USER_AGENT}}
     def showmenu(self,cItem):
         TAB = [('مسلسلات','','10',0),('أفلام','','10',1),('برامج و حفلات','/category/البرامج-و-حفلات-tv/','20',''),('أغاني','','10',2),
-        # ('الممثلين','/الممثلين/','20',''),
         ('المضاف حديثاً','/','20','newly'),]
         self.add_menu(cItem,'','','','','',TAB=TAB,search=False)
         self.addDir({'import':cItem['import'],'category' :'host2','title':T('Search')  ,'icon':'https://i.ibb.co/dQg0hSG/search.png','mode':'50'})
@@ -568,21 +569,114 @@ class TSIPHost(TSCBaseHostClass):
         if not sts:
             return []
         links = []
-        servers = re.findall(r"SwitchServer\(this,\s*'([^']+)'\).*?>([^<]+)<", data)
-        if servers:
-            for srv_url, srv_name in servers:
-                srv_url = self.std_url(srv_url)
-                srv_name = self.cleanHtmlStr(srv_name).strip()
-                links.append({'name': srv_name, 'url': srv_url, 'need_resolve': 1})
-                printDBG("  >> Found server: %s (%s)" % (srv_name, srv_url))
-        else:
-            old_servers = re.findall(r'<li[^>]+data-embed=["\']([^"\']+)["\'][^>]*>([^<]+)<', data)
-            for srv_url, srv_name in old_servers:
-                srv_url = self.std_url(srv_url)
-                srv_name = self.cleanHtmlStr(srv_name).strip()
-                links.append({'name': srv_name, 'url': srv_url, 'need_resolve': 1})
-                printDBG("  >> Found old server: %s (%s)" % (srv_name, srv_url))
+        post_id = None
+        post_id_match = re.search(r'DataPosting\.append\(\'PostID\',\s*(\d+)\)', data)
+        if post_id_match:
+            post_id = post_id_match.group(1)
+        if not post_id:
+            printDBG("لم يتم العثور على PostID")
+            return []
+        printDBG(f"تم العثور على PostID: {post_id}")
+        servers = re.findall(r'SwitchServer\(this,\s*(\d+)\)[^>]*>([^<]+)<', data)
+        if not servers:
+            printDBG("لم يتم العثور على أي سيرفرات")
+            return []
+        printDBG(f"تم العثور على {len(servers)} سيرفر")
+        for server_id, server_name in servers:
+            server_name = self.cleanHtmlStr(server_name).strip()
+            if not server_name:
+                continue
+            embed_url = self.get_video_url_from_api_fast(post_id, server_id)
+            if embed_url:
+                if any(domain in embed_url for domain in ['vidlo.us']) and ('.m3u8' in embed_url or '.mp4' in embed_url):
+                    links.append({'name': server_name,'url': embed_url,'need_resolve': 0})
+                    printDBG(f"  >> تم إضافة سيرفر: {server_name} مع رابط مباشر")
+                else:
+                    links.append({'name': server_name,'url': embed_url,'need_resolve': 1})
+                    printDBG(f"  >> تم إضافة سيرفر: {server_name} مع رابط embed")
+            else:
+                printDBG(f"  >> فشل جلب الرابط للسيرفر: {server_name}")
         return links
+    def get_video_url_from_api_fast(self, post_id, server_id):
+        """جلب سريع لرابط API"""
+        try:
+            api_url = self.MAIN_URL + "/wp-content/themes/Lodynet2020/Api/RequestServerEmbed.php"
+            post_data = f'PostID={post_id}&ServerID={server_id}'
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+            req = urllib.request.Request(api_url, data=post_data.encode('utf-8'), headers=headers)
+            response = urllib.request.urlopen(req, timeout=5)
+            video_url = response.read().decode('utf-8').strip()
+            if not video_url.startswith('http'):
+                iframe_match = re.search(r'src=["\'](https?://[^"\']+)["\']', video_url)
+                if iframe_match:
+                    video_url = iframe_match.group(1)
+                else:
+                    try:
+                        json_data = json.loads(video_url)
+                        if isinstance(json_data, dict):
+                            for v in json_data.values():
+                                if isinstance(v, str) and 'http' in v:
+                                    video_url = v
+                                    break
+                    except:
+                        pass
+            if video_url and ('http' in video_url or '//' in video_url):
+                if video_url.startswith('//'):
+                    video_url = 'https:' + video_url
+                return video_url
+        except Exception as e:
+            printDBG(f"خطأ في جلب رابط API للسيرفر {server_id}: {str(e)}")
+        return None
+    def getVideoLinks(self, videoUrl):
+        """النظام سيتولى تحليل الروابط تلقائياً"""
+        return [{'name': 'رابط فيديو', 'url': videoUrl, 'need_resolve': 0}]
+    def getVideos(self, videoUrl):
+        printDBG("LodyNet.getVideos --------------------------------")
+        printDBG(f"videoUrl: {videoUrl}")
+        if isinstance(videoUrl, dict) and videoUrl.get('type') == 'lodynet_api':
+            post_id = videoUrl.get('post_id')
+            server_id = videoUrl.get('server_id')
+            api_url = videoUrl.get('url')
+            referer = videoUrl.get('referer', self.MAIN_URL)
+            if not all([post_id, server_id, api_url]):
+                return []
+            printDBG(f"طلب رابط التشغيل - PostID: {post_id}, ServerID: {server_id}")
+            post_data = f'PostID={post_id}&ServerID={server_id}'
+            headers = {
+                'User-Agent': self.USER_AGENT,
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Content-Length': str(len(post_data)),
+                'X-Requested-With': 'XMLHttpRequest',
+                'Origin': self.MAIN_URL,
+                'Referer': referer
+            }
+            try:
+                req = urllib.request.Request(api_url, data=post_data.encode('utf-8'), headers=headers)
+                response = urllib.request.urlopen(req, timeout=30)
+                response_data = response.read().decode('utf-8').strip()
+                printDBG(f"استجابة API: {response_data}")
+                if response_data and (response_data.startswith('http') or '//' in response_data):
+                    video_url = response_data.strip()
+                    if not video_url.startswith('http'):
+                        video_url = 'https:' + video_url if video_url.startswith('//') else video_url
+                    printDBG(f"تم الحصول على الرابط: {video_url}")
+                    return [{'name': 'رابط مباشر', 'url': video_url, 'need_resolve': 0}]
+                else:
+                    printDBG("لم يتم إرجاع رابط صالح من API")
+                    return []
+            except urllib.error.HTTPError as e:
+                printDBG(f"خطأ HTTP في طلب API: {e.code} - {e.reason}")
+                return []
+            except Exception as e:
+                printDBG(f"خطأ في طلب API: {str(e)}")
+                return []
+        elif isinstance(videoUrl, str):
+            return [{'name': 'رابط مباشر', 'url': videoUrl, 'need_resolve': 0}]
+        return []
     def start(self, cItem):
         mode = cItem.get('mode', None)
         if mode == '00':
