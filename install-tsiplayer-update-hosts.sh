@@ -1,4 +1,4 @@
-##setup command=wget -q "--no-check-certificate" https://github.com/angelheart150/My-tsiplayer/raw/main/install-tsiplayer-update-hosts.sh -O - | /bin/sh
+#setup command=wget -q "--no-check-certificate" https://github.com/angelheart150/My-tsiplayer/raw/main/install-tsiplayer-update-hosts.sh -O - | /bin/sh
 #!/bin/sh
 ##############################################################
 # TSIPlayer Auto Installer from GitHub Repo by Mohamed Elsafty

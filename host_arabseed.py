@@ -10,17 +10,17 @@ try:
 except ImportError:
     from HTMLParser import HTMLParser  # Python 2.x
     unescape = HTMLParser().unescape
-############################################################################## 20251108
+############################################################################## 20260216
 def getinfo():
     info_={}
     name = 'Arabseed'
-    hst = 'https://a.asd.homes'
+    hst = 'https://asd.pics/'
     info_['old_host'] = hst
     hst_ = tshost(name)	
     if hst_!='': hst = hst_
     info_['host']= hst
     info_['name']=name
-    info_['version']='4.0 08/11/2025'    
+    info_['version']='5.0 08/02/2026'    
     info_['dev']='RGYSoft+Angel_heart'
     info_['cat_id']='21'
     info_['desc']='أفلام و مسلسلات عربية و اجنبية'
@@ -42,9 +42,10 @@ class TSIPHost(TSCBaseHostClass):
         self.Arabseed_TAB = [
                             {'category':hst, 'sub_mode':0, 'title': 'الأفـــلام', 'mode':'10'},
                             {'category':hst, 'sub_mode':1, 'title': 'مســلـســلات', 'mode':'10'},
-                            {'category':hst, 'sub_mode':2, 'title': 'رمـضـان', 'mode':'10'},
-                            {'category':hst, 'sub_mode':3, 'title': 'انـمـي', 'mode':'10'},                            
-                            {'category':hst, 'sub_mode':4, 'title': 'متنوع','mode':'10'},
+                            {'category':hst, 'sub_mode':2, 'title': 'مواسم المسلسلات - البرامج - الأنمي', 'mode':'10'},
+                            {'category':hst, 'sub_mode':3, 'title': 'رمـضـان', 'mode':'10'},
+                            {'category':hst, 'sub_mode':4, 'title': 'انـمـي', 'mode':'10'},                            
+                            {'category':hst, 'sub_mode':5, 'title': 'متنوع','mode':'10'},
                             {'category':'search','title':tscolor('\c00????30') + _('Search'), 'search_item':True,'page':1,'hst':'tshost'},
                             ]		
         self.listsTab(self.Arabseed_TAB, {'import':cItem.get('import',''),'icon':cItem.get('icon','')})
@@ -53,51 +54,72 @@ class TSIPHost(TSCBaseHostClass):
         gnr = cItem['sub_mode']
         categories = {
             0: [
-                ('/category/arabic-movies-6/', 'أفلام عربية'),
-                ('/category/foreign-movies-6/', 'أفلام أجنبية'),
-                ('/category/turkish-movies/', 'أفلام تركية'),
-                ('/category/indian-movies/', 'أفلام هندية'),
-                ('/category/netfilx/افلام-netfilx/', 'Netfilx أفلام'),
-                ('/category/asian-movies/', 'أفلام اسيوية'),
-                ('/category/افلام-كلاسيكيه/', 'افلام كلاسيكيه'),
-                ('/category/افلام-مدبلجة/', 'افلام مدبلجة'),
+                ('/category/arabic-movies-6/','أفلام عربية'),
+                ('/category/foreign-movies-6/','أفلام أجنبية'),
+                ('/category/turkish-movies/','أفلام تركية'),
+                ('/category/indian-movies/','أفلام هندية'),
+                ('/category/netfilx/افلام-netfilx/','Netfilx أفلام'),
+                ('/category/asian-movies/','أفلام اسيوية'),
+                ('/category/افلام-كلاسيكيه/','افلام كلاسيكيه'),
+                ('/category/افلام-مدبلجة/','افلام مدبلجة'),
             ],
             1: [
-                ('/category/arabic-series-3/', 'مسلسلات عربية'),
-                ('/category/مسلسلات-مصريه/', 'مسلسلات مصريه'),
-                ('/category/foreign-series-3/', 'مسلسلات أجنبية'),
-                ('/category/turkish-series-2/', 'مسلسلات تركية'), 
-                ('/category/مسلسلات-هندية/', 'مسلسلات هندية'), 
-                ('/category/netfilx/مسلسلات-netfilz/', 'مسلسلات Netfilx'),
-                ('/category/cartoon-series/', 'مسلسلات كرتون'),
-                ('/category/مسلسلات-كوريه/', 'مسلسلات كوريه'),
-                ('/category/مسلسلات-مدبلجة/', 'مسلسلات مدبلجة')
+                ('/category/arabic-series-3/','مسلسلات عربية'),
+                ('/category/مسلسلات-مصريه/','مسلسلات مصريه'),
+                ('/category/foreign-series-3/','مسلسلات أجنبية'),
+                ('/category/turkish-series-/','مسلسلات تركية'), 
+                ('/category/مسلسلات-هندية/','مسلسلات هندية'), 
+                ('/category/netfilx/مسلسلات-netfilz/','مسلسلات Netfilx'),
+                ('/category/cartoon-series/','مسلسلات كرتون'),
+                ('/category/مسلسلات-كوريه/','مسلسلات كوريه'),
+                ('/category/مسلسلات-مدبلجة/','مسلسلات مدبلجة')
             ],
             2: [
-                ('/category/مسلسلات-رمضان/ramadan-series-2025/', 'رمضان 2025'),
-                ('/category/مسلسلات-رمضان/ramadan-series-2024/', 'رمضان 2024'),
-                ('/category/مسلسلات-رمضان/ramadan-series-2023/', 'رمضان 2023'),
-                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2022/', 'مسلسلات رمضان 2022'),
-                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2021/', 'مسلسلات رمضان 2021'),
-                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2020-hd/', 'مسلسلات رمضان 2020'),
-                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2019/', 'مسلسلات رمضان 2019'),
+                ('/category/arabic-series-8/packs/','مواسم مسلسلات عربية'),
+                ('/category/مسلسلات-مصريه/packs/','مواسم مسلسلات مصرية'),
+                ('/category/foreign-series-3/packs/','مواسم مسلسلات اجنبية'),
+                ('/category/turkish-series-2/packs/','مواسم مسلسلات تركية'), 
+                ('/category/مسلسلات-هندية/packs/','مواسم مسلسلات هندية'), 
+                ('/category/netfilx/مسلسلات-netfilx-1/packs/','مواسم مسلسلات Netfilx'),
+                ('/category/مسلسلات-كوريه/packs/','مواسم مسلسلات كورية'),
+                ('/category/مسلسلات-مدبلجة/packs/','مواسم مسلسلات مدبلجة'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2026/packs/','مواسم مسلسلات رمضان 2026'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2025/packs/','مواسم مسلسلات رمضان 2025'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2024/packs/','مواسم مسلسلات رمضان 2024'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2023/packs/','مواسم مسلسلات رمضان 2023'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2022/packs/','مواسم مسلسلات رمضان 2022'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2021/packs/','مواسم مسلسلات رمضان 2021'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2020-hd/packs/','مواسم مسلسلات رمضان 2020'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2019/packs/','مواسم مسلسلات رمضان 2019'),
+                ('/category/برامج-تلفزيونية/packs/','مواسم برامج تليفزيونية'),
+                ('/category/cartoon-series/packs/','مواسم مسلسلات كرتون'),
             ],
             3: [
-                ('/category/افلام-انيميشن/', 'افلام انيميشن'),
-                ('/category/cartoon-series/', 'مسلسلات كرتون')
+                ('/category/مسلسلات-رمضان/ramadan-series-2026/','مسلسلات رمضان 2026'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2025/','مسلسلات رمضان 2025'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2024/','مسلسلات رمضان 2024'),
+                ('/category/مسلسلات-رمضان/ramadan-series-2023/','مسلسلات رمضان 2023'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2022/','مسلسلات رمضان 2022'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2021/','مسلسلات رمضان 2021'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2020-hd/','مسلسلات رمضان 2020'),
+                ('/category/مسلسلات-رمضان/مسلسلات-رمضان-2019/','مسلسلات رمضان 2019'),
             ],
-            4: [ 
-                ('/category/اغاني-عربي/', 'اغاني عربي'),
-                ('/category/wwe-shows/', 'مصارعه'),
-                ('/category/برامج-تلفزيونية/', 'برامج تلفزيونية'),
-                ('/category/مسرحيات-عربي/', 'مسرحيات عربيه'),
+            4: [
+                ('/category/افلام-انيميشن/','افلام انيميشن'),
+                ('/category/cartoon-series/','مسلسلات كرتون')
+            ],
+            5: [ 
+                ('/category/اغاني-عربي/','اغاني عربي'),
+                ('/category/wwe-shows/','مصارعه'),
+                ('/category/برامج-تلفزيونية/','برامج تلفزيونية'),
+                ('/category/مسرحيات-عربي/','مسرحيات عربيه'),
             ]
         }
         cat_list = categories.get(gnr, [])
         for url, title in cat_list:
             full_url = self.MAIN_URL + url
-            item = {'import': cItem.get('import', ''),'category': 'host2','url': full_url,'title': title,'desc': '','icon': cItem.get('icon', ''),'mode': '20','sub_mode': gnr}
-            if gnr in [0, 4]:
+            item = {'import': cItem.get('import', ''),'category': 'host2','url': full_url,'title': title,'desc': '','good_for_fav':True,'icon': cItem.get('icon', ''),'mode': '20','sub_mode': gnr}
+            if gnr in [0, 5]:
                 item['direct_video'] = True
             self.addDir(item)
     def SearchResult(self, str_ch, page, extra):
@@ -109,32 +131,39 @@ class TSIPHost(TSCBaseHostClass):
         if not sts:
             printDBG('SearchResult: failed to get page')
             return []
-        blocks = re.findall(
-            r'(<a[^>]+class="movie__block[^"]*"[^>]*>.*?</a>)',
-            data, re.S
-        )
+        blocks = re.findall(r'(<a[^>]+class="movie__block[^"]*"[^>]*>.*?</a>)',data, re.S)
         printDBG(f"Found {len(blocks)} results")
         for block in blocks:
             url = self.cm.ph.getSearchGroups(block, r'href="([^"]+)"')[0]
             icon = self.cm.ph.getSearchGroups(block, r'(?:data-src|src)="([^"]+)"')[0]
+            url = quote(url, safe=':/?&=%')
+            icon = quote(icon, safe=':/?&=%')
             title = self.cm.ph.getSearchGroups(block, r'<h3>([^<]+)</h3>')[0]
             title = self.cleanHtmlStr(title)
-            desc = ""
             story = self.cm.ph.getSearchGroups(block, r'<p[^>]*>(.*?)</p>')[0]
             quality = self.cm.ph.getSearchGroups(block, r'class="__quality[^"]*">([^<]+)<')[0]
             genre = self.cm.ph.getSearchGroups(block, r'class="__genre[^"]*">([^<]+)<')[0]
             rating = self.cm.ph.getSearchGroups(block, r'class="post__ratings">([^<]+)<')[0]
             category = self.cm.ph.getSearchGroups(block, r'class="post__category[^"]*">([^<]+)<')[0]
-            if story:
-                desc += tscolor('\c00FFFF00') + "القصة: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(story) + "\n"
-            if category:
-                desc += tscolor('\c0066FFFF') + "القسم: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(category) + "\n"
-            if genre:
-                desc += tscolor('\c00FF00FF') + "النوع: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(genre) + "\n"
-            if quality:
-                desc += tscolor('\c0000FF00') + "الجودة: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(quality) + "\n"
+            line1_parts = []
+            if quality: line1_parts.append(tscolor('\c0000FF00') + "الجودة: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(quality))
+            if genre:   line1_parts.append(tscolor('\c00FF00FF') + "النوع: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(genre))
             if rating:
-                desc += tscolor('\c00FF6600') + "التقييم: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(rating)
+                rating_text = self.cleanHtmlStr(rating).strip()
+                rating_value = None
+                match_num = re.search(r'(\d+(\.\d+)?)', rating_text)
+                if match_num:rating_value = float(match_num.group(1))
+                color = '\c00FFFFFF'
+                if rating_value is not None:
+                    if rating_value >= 7: color = '\c0000FF00'
+                    elif rating_value >= 5: color = '\c00FFA500'
+                    else: color = '\c00FF0000'
+                line1_parts.append(tscolor('\c00FF6600') + "التقييم: " +tscolor(color) +rating_text +tscolor('\c00FFFFFF'))
+            if category:line1_parts.append(tscolor('\c0066FFFF') + "الفئة: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(category))
+            line1 = " | ".join(line1_parts)
+            line2 = tscolor('\c00FFFF00') + "القصة: " + tscolor('\c00FFFFFF') + self.cleanHtmlStr(story) if story else ''
+            desc = line1
+            if line2: desc += "\n" + line2
             self.addVideo({'import': extra,'title': title,'url': url,'icon': icon,'desc': desc.strip(),'mode': '21','hst': 'tshost'})
         return []
     def MediaBoxResult1(self,str_ch,year_,extra):
@@ -160,64 +189,94 @@ class TSIPHost(TSCBaseHostClass):
         seen_urls = set()
         fetch_all = cItem.get('fetch_all', False)
         url = cItem['url']
+        is_packs = '/packs/' in url
         collected_items = []
         next_url = None
         sub_mode = cItem.get('sub_mode', -1)
         printDBG('showitms - URL: %s' % url)
         while True:
             sts, data = self.getPage(url)
-            if not sts:
-                break
+            if not sts: break
             items_data = []
             items_pattern = r'<li class="box__xs__2[^>]*>.*?<a href="([^"]+)"[^>]*title="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*>(.*?)</a>'
-            items_matches = re.findall(items_pattern, data, re.S)
-            printDBG('showitms - Found %s items with basic info' % len(items_matches))
-            for (url1, title, image, content) in items_matches:
-                if any(x in url1 for x in ['/category/', '/tag/', 'wp-login', 'wp-admin']):
-                    continue
-                if url1 in seen_urls:
-                    continue
-                seen_urls.add(url1)
-                h3_match = re.search(r'<h3>(.*?)</h3>', content, re.S)
-                clean_title = unescape(ph.clean_html(h3_match.group(1))) if h3_match else unescape(ph.clean_html(title))
-                if not clean_title or len(clean_title.strip()) < 2:
-                    continue
-                category_match = re.search(r'<div class="post__category[^>]*>(.*?)</div>', content, re.S)
-                genre_match = re.search(r'<div class="__genre[^>]*>(.*?)</div>', content, re.S)
-                rating_match = re.search(r'<div class="post__ratings">(.*?)</div>', content, re.S)
-                quality_match = re.search(r'<div class="__quality[^>]*>(.*?)</div>', content, re.S)
-                description_match = re.search(r'<p[^>]*>(.*?)</p>', content, re.S)
-                if not url1.startswith('http'):
-                    url1 = self.MAIN_URL + url1
-                if image.startswith('//'):
-                    image = 'https:' + image
-                elif not image.startswith('http'):
-                    image = self.MAIN_URL + image
-                try:
-                    parsed = image.split('/')
-                    encoded_parts = []
-                    for part in parsed:
-                        try:
-                            part.encode('ascii')
-                            encoded_parts.append(part)
-                        except UnicodeEncodeError:
-                            encoded_parts.append(quote(part))
-                    image = '/'.join(encoded_parts)
-                except:
-                    pass
-                desc_lines = []
-                if description_match and description_match.group(1).strip():
-                    desc_lines.append(tscolor('\c00FFFF00') + 'القصة: ' + tscolor('\c00FFFFFF') + ph.clean_html(description_match.group(1)))
-                if quality_match and quality_match.group(1).strip():
-                    desc_lines.append(tscolor('\c0000FF00') + 'الجودة: ' + tscolor('\c00FFFFFF') + ph.clean_html(quality_match.group(1)))
-                if genre_match and genre_match.group(1).strip():
-                    desc_lines.append(tscolor('\c00FF00FF') + 'النوع: ' + tscolor('\c00FFFFFF') + ph.clean_html(genre_match.group(1)))
-                if rating_match and rating_match.group(1).strip():
-                    desc_lines.append(tscolor('\c00FF6600') + 'التقييم: ' + tscolor('\c00FFFFFF') + ph.clean_html(rating_match.group(1)))
-                if category_match and category_match.group(1).strip():
-                    desc_lines.append(tscolor('\c0066FFFF') + 'الفئة: ' + tscolor('\c00FFFFFF') + ph.clean_html(category_match.group(1)))
-                desc = '\\n'.join(desc_lines) if desc_lines else ''
-                self.addVideo({'import': cItem.get('import', ''),'category': 'host2','title': clean_title,'url': url1,'desc': desc,'icon': image,'EPG': True,'hst': 'tshost','mode': '22','sub_mode': sub_mode})
+            items_matches = []
+            if not is_packs:
+                items_pattern = r'<li class="box__xs__2[^>]*>.*?<a href="([^"]+)"[^>]*title="([^"]+)"[^>]*>.*?<img[^>]*src="([^"]+)"[^>]*>(.*?)</a>'
+                items_matches = re.findall(items_pattern, data, re.S)
+            else:
+                # ===== PACKS / SEASONS =====
+                packs_pattern = r'(<li class="box__xs__1.*?)(?=<li class="box__xs__1|\Z)'
+                items_matches = re.findall(packs_pattern, data, re.S)
+            printDBG('showitms - Found %s items (packs=%s)' % (len(items_matches), is_packs))
+            for item in items_matches:
+                if not is_packs:
+                    url1, title, image, content = item
+                    clean_title = unescape(ph.clean_html(title))
+                    if not url1.startswith('http'): url1 = self.MAIN_URL + url1
+                    if image.startswith('//'): image = 'https:' + image
+                    elif not image.startswith('http'): image = self.MAIN_URL + image
+                    url1 = quote(url1, safe=':/?&=%')
+                    image = quote(image, safe=':/?&=%')
+                    description_match = re.search(r'<p[^>]*>(.*?)</p>', content, re.S)
+                    quality_match     = re.search(r'<div class="__quality[^>]*>(.*?)</div>', content, re.S)
+                    genre_match       = re.search(r'<div class="__genre[^>]*>(.*?)</div>', content, re.S)
+                    rating_match      = re.search(r'<div class="post__ratings">(.*?)</div>', content, re.S)
+                    category_match    = re.search(r'<div class="post__category[^>]*>(.*?)</div>', content, re.S)
+                    first_line_parts = []
+                    if quality_match and quality_match.group(1).strip():
+                        first_line_parts.append(tscolor('\c0000FF00') + 'الجودة: ' + tscolor('\c00FFFFFF') + ph.clean_html(quality_match.group(1)))
+                    if genre_match and genre_match.group(1).strip():
+                        first_line_parts.append(tscolor('\c00FF00FF') + 'النوع: ' + tscolor('\c00FFFFFF') + ph.clean_html(genre_match.group(1)))
+                    if rating_match and rating_match.group(1).strip():
+                        rating_text = ph.clean_html(rating_match.group(1)).strip()
+                        rating_value = None
+                        match_num = re.search(r'(\d+(\.\d+)?)', rating_text)
+                        if match_num: rating_value = float(match_num.group(1))
+                        color = '\c00FFFFFF'  # افتراضي أبيض
+                        if rating_value is not None:
+                            if rating_value >= 7: color = '\c0000FF00'   # أخضر
+                            elif rating_value >= 5: color = '\c00FFA500'   # برتقالي
+                            else: color = '\c00FF0000'   # أحمر
+                        first_line_parts.append(tscolor('\c00FF6600') + 'التقييم: ' +tscolor(color) +rating_text +tscolor('\c00FFFFFF'))
+
+                    if category_match and category_match.group(1).strip():
+                        first_line_parts.append(tscolor('\c0066FFFF') + 'الفئة: ' + tscolor('\c00FFFFFF') + ph.clean_html(category_match.group(1)))
+                    first_line = ' | '.join(first_line_parts)
+                    second_line = ''
+                    if description_match and description_match.group(1).strip():
+                        second_line = tscolor('\c00FFFF00') + 'القصة: ' + tscolor('\c00FFFFFF') + ph.clean_html(description_match.group(1))
+                    desc = first_line
+                    if second_line: desc += '\\n' + second_line
+                    self.addVideo({'import': cItem.get('import', ''),'category': 'host2','title': clean_title,'url': url1,'desc': desc,'good_for_fav': True,'icon': image,'EPG': True,'hst': 'tshost','mode': '22','sub_mode': sub_mode})
+                else:
+                    content = item
+                    url1   = ph.search(content, r'href="([^"]+)"')[0]
+                    title  = ph.search(content, r'<div class="title___">([^<]+)</div>')[0]
+                    image  = ph.search(content, r'(?:data-src|src)="([^"]+)"')[0]
+                    clean_title = unescape(ph.clean_html(title))
+                    if not url1.startswith('http'): url1 = self.MAIN_URL + url1
+                    if image.startswith('//'): image = 'https:' + image
+                    elif not image.startswith('http'): image = self.MAIN_URL + image
+                    url1 = quote(url1, safe=':/?&=%')
+                    image = quote(image, safe=':/?&=%')
+                    desc_parts = []
+                    hover_box = ph.search(content, r'<div class="hover__box.*?>(.*?)</div>', flags=re.S)[0]
+                    dots_info = ph.search(hover_box, r'<ul class="dots__info">(.*?)</ul>', flags=re.S)[0]
+                    line_parts = []
+                    if dots_info:
+                        spans = re.findall(r'<span>(.*?)</span>', dots_info)
+                        if len(spans) > 0: line_parts.append(tscolor('\c00FFFF00') + 'السنة: ' + tscolor('\c00FFFFFF') + ph.clean_html(spans[0]))
+                        if len(spans) > 1: line_parts.append(tscolor('\c00FFFF00') + 'الدولة: ' + tscolor('\c00FFFFFF') + ph.clean_html(spans[1]))
+                    bottom_ul = ph.search(hover_box, r'<ul class="bottom__ul">(.*?)</ul>', flags=re.S)[0]
+                    if bottom_ul:
+                        lis = re.findall(r'<li>(.*?)</li>', bottom_ul)
+                        if len(lis) > 0: line_parts.append(tscolor('\c0000FF00') + 'الجودة: ' + tscolor('\c00FFFFFF') + ph.clean_html(lis[0]))
+                        if len(lis) > 1: line_parts.append(tscolor('\c00FF00FF') + 'النوع: ' + tscolor('\c00FFFFFF') + ph.clean_html(lis[1]))
+                    if line_parts: desc_parts.append(' | '.join(line_parts))
+                    story = ph.search(content, r'<p class="story">(.*?)</p>')[0]
+                    if story: desc_parts.append(tscolor('\c00FFFF00') + 'القصة: ' + tscolor('\c00FFFFFF') + ph.clean_html(story))
+                    desc = '\n'.join(desc_parts)
+                    self.addDir({'import': cItem.get('import', ''),'category': 'host2','title': clean_title,'url': url1,'icon': image,'desc': desc,'good_for_fav':True,'mode': '23','sub_mode': sub_mode})
             next_url = None
             pagination_match = re.search(r'class="pagination.*?<a[^>]*href="([^"]*)"[^>]*>.*?التالي', data, re.S | re.I)
             if pagination_match:
@@ -243,6 +302,8 @@ class TSIPHost(TSCBaseHostClass):
                 url = next_url
             else:
                 break
+            if is_packs and next_url:
+                next_url = next_url.replace('/packs/packs/', '/packs/')
         if not fetch_all and len(seen_urls) > 0:
             self.addDir({'import': cItem.get('import', ''),'category': 'host2', 'title': tscolor('\c0000??66') + '◀ عرض الكل فى قائمة واحدة ▶','url': cItem['url'],'desc': tscolor('\c0000??66') + 'يجمع كل محتويات القسم بدون تكرار ومرتب أبجديا .. لكنه يأخذ وقت أطول للتحميل فكن صبورا.','icon': cItem.get('icon', ''),'mode': '20','fetch_all': True,'sub_mode': sub_mode})
         if next_url and not fetch_all:
@@ -251,279 +312,303 @@ class TSIPHost(TSCBaseHostClass):
             if clean_next != clean_current:
                 self.addDir({'import': cItem.get('import', ''),'category': 'host2','title': tscolor('\c00FFFF00') + '<< الصفحة التالية','url': next_url,'desc': '','icon': cItem.get('icon', ''),'mode': '20','page': cItem.get('page', 1) + 1,'sub_mode': sub_mode})
     def showelms(self, cItem):
-        sts, data = self.getPage(cItem['url'])
-        if not sts:
+        url = cItem.get('url')
+        season_id = cItem.get('season_id', '')
+        desc = cItem.get('desc', '')
+        icon = cItem.get('icon', '')
+        if not url:
             return
-        episodes_section = re.findall(r'class="ContainerEpisodesList(.*?)</div>', data, re.S)
+        if season_id:
+            post_url = self.getFullUrl("/season__episodes/")
+            post_data = {'season_id': season_id,'csrf_token': cItem.get('csrf_token', '')}
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Referer': url
+            }
+            sts, response = self.cm.getPage(post_url, {'header': headers}, post_data)
+            if not sts: return
+            try: result = json_loads(response)
+            except: return
+            if result.get('type') != 'success': return
+            html = result.get('html', '')
+        else:
+            sts, html = self.getPage(url)
+            if not sts: return
+        episodes_section = re.findall(r'class="ContainerEpisodesList(.*?)</div>', html, re.S)
+        episodes = []
         if episodes_section:
-            episodes = []
             raw_episodes = re.findall(r'href="(.*?)".*?>(.*?)</a>', episodes_section[0], re.S)
-            for url, title in raw_episodes:
+            for ep_url, title in raw_episodes:
                 clean_title = ph.clean_html(title)
                 match = re.search(r'الحلقة\s+(\d+)', clean_title)
                 ep_num = int(match.group(1)) if match else 0
-                episodes.append({'url': url, 'title': clean_title, 'num': ep_num})
+                ep_url = quote(ep_url, safe=':/?&=%')
+                ep_icon = quote(icon, safe=':/?&=%')
+                episodes.append({'url': ep_url, 'title': clean_title, 'num': ep_num, 'icon': ep_icon})
             episodes.sort(key=lambda x: x['num'])
             for ep in episodes:
-                self.addVideo({'import': cItem.get('import', ''),'title': ep['title'],'url': ep['url'],'icon': cItem.get('icon', ''),'desc': cItem.get('desc', ''),'EPG': True,'hst': 'tshost'})
+                self.addVideo({'import': cItem.get('import', ''),'title': ep['title'],'url': ep['url'],'icon': ep['icon'],'desc': desc,'good_for_fav':True,'EPG': True,'hst': 'tshost'})
         else:
-            self.addVideo({'import': cItem.get('import', ''),'title': cItem['title'],'url': cItem['url'],'icon': cItem.get('icon', ''),'desc': cItem.get('desc', ''),'EPG': True,'hst': 'tshost'})  
+            self.addVideo({'import': cItem.get('import', ''),'title': cItem['title'],'url': quote(url, safe=':/?&=%'),'icon': quote(icon, safe=':/?&=%'),'desc': desc,'EPG': True,'hst': 'tshost'})
+    def listSeasons(self, cItem):
+        printDBG('ArabSeed.listSeasons >>> %s' % cItem)
+        url = cItem.get('url')
+        sts, data = self.getPage(url)
+        if not sts or not data: return
+        # ================= TRAILER =================
+        trailer_url = self.cm.ph.getSearchGroups(data,r'data-iframe="([^"]+)"')[0]
+        if trailer_url:
+            # YouTube
+            if 'youtube.com/embed/' in trailer_url: trailer_url = trailer_url.replace('youtube.com/embed/','youtube.com/watch?v=')
+            # IMDb
+            elif 'imdb.com/video/' in trailer_url: pass
+            self.addVideo({'title': tscolor('\c0000??00') + "TRAILER",'url': trailer_url,'type': 'video','icon': cItem.get('icon', ''),'need_resolve': 1,'hst': 'tshost'})
+        printDBG('[ArabSeed] trailer_url = %s' % trailer_url)
+        # ================= CSRF TOKEN =================
+        csrf_token = self.cm.ph.getSearchGroups(data, r'csrf__token["\']\s*:\s*["\']([^"\']+)')[0]
+        if not csrf_token: csrf_token = self.cm.ph.getSearchGroups(data, r'name="csrf_token" value="([^"]+)"')[0]
+        # ================= SEASONS =================
+        seasons_block = self.cm.ph.getDataBeetwenMarkers(data, 'id="seasons__list"', '</div></div>', False)[1]
+        if seasons_block:
+            season_items = self.cm.ph.getAllItemsBeetwenMarkers(seasons_block, '<li', '</li>')
+            for s in season_items:
+                season_id = self.cm.ph.getSearchGroups(s, r'data-term="([^"]+)"')[0]
+                title = self.cm.ph.getSearchGroups(s, r'<span>([^<]+)</span>')[0]
+                if not season_id or not title: continue
+                params = dict(cItem)
+                params.update({'title': title.strip(),'season_id': season_id,'csrf_token': csrf_token,'mode': '24','hst': 'tshost'})
+                self.addDir(params)
+        # ================= NO SEASONS → DIRECT EPISODES =================
+        else:
+            printDBG('[ArabSeed] No seasons → listing episodes directly')
+            episodes_block = self.cm.ph.getDataBeetwenMarkers(data, '<ul class="episodes__list', '</ul>', False)[1]
+            promo_url = self.cm.ph.getSearchGroups(data, r'<div class="watch__and__download.*?<a href="([^"]+/watch/)"',)[0]
+            if promo_url:
+                printDBG('[ArabSeed] Single promo detected')
+                params = dict(cItem)
+                params.update({'title': tscolor('\c00????00') + "برومو المسلسل",'url': promo_url,'type': 'video','mode': '22','hst': 'tshost','icon': cItem.get('icon', '')})
+                self.addVideo(params)
+            if episodes_block:
+                episodes = self.cm.ph.getAllItemsBeetwenMarkers(episodes_block, '<li', '</li>')
+                episodes.reverse()
+                for ep in episodes:
+                    ep_num = self.cm.ph.getSearchGroups(ep, r'<b>(\d+)</b>')[0]
+                    if not ep_num: continue
+                    ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
+                    if not ep_url: continue
+                    if '/watch/' not in ep_url: ep_url += 'watch/'
+                    self.addVideo({'title': u'الحلقة %s' % ep_num,'url': ep_url,'icon': cItem.get('icon', ''),'mode': '22','hst': 'tshost'})
+            elif 'watch__area' in data:
+                printDBG('[ArabSeed] Found watch__area → trying encoded video')
+                m = re.search(r'data-post="(\d+)".+?data-qu="(\d+)".+?data-link="([^"]+)"', data, re.S)
+                if m:
+                    post_id, quality, link = m.groups()
+                    try:
+                        encoded = re.search(r'(?:url=|id=)([A-Za-z0-9+/=]+)', link).group(1)
+                        padding = 4 - len(encoded) % 4
+                        if padding != 4: encoded += '=' * padding
+                        video_url = base64.b64decode(encoded).decode('utf-8')
+                    except:
+                        video_url = self.MAIN_URL + link if link.startswith('/') else link
+                    self.addVideo({'title': u'برومو / مشاهدة [%sP]' % quality,'url': video_url,'icon': cItem.get('icon', ''),'mode': '22','hst': 'tshost'})
+
+    def listEpisodes(self, cItem):
+        printDBG('ArabSeed.listEpisodes >>> %s' % cItem)
+        url = cItem.get('url')
+        season_id = cItem.get('season_id')
+        csrf_token = cItem.get('csrf_token')
+        if not url or not season_id or not csrf_token: return
+        # ========= CHECK FIRST SEASON =========
+        sts, data = self.getPage(url)
+        if sts:
+            selected = self.cm.ph.getSearchGroups(data,r'<li[^>]+class="selected"[^>]+data-term="(\d+)"')[0]
+            if selected == season_id:
+                episodes = self.cm.ph.getAllItemsBeetwenMarkers(data, '<li', '</li>')
+                episodes.reverse()
+                for ep in episodes:
+                    ep_num = self.cm.ph.getSearchGroups(ep, r'<b>(\d+)</b>')[0]
+                    if not ep_num: continue
+                    ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
+                    if not ep_url: continue
+                    if '/watch/' not in ep_url: ep_url += 'watch/'
+                    self.addVideo({'title': u'الحلقة %s' % ep_num,'url': ep_url,'mode': '22','hst': 'tshost'})
+                return
+        # ========= AJAX OTHER SEASONS =========
+        post_url = self.getFullUrl('/season__episodes/')
+        post_data = {'season_id': season_id,'csrf_token': csrf_token}
+        headers = {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Referer': url,
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+        sts, response = self.cm.getPage(post_url, {'header': headers}, post_data)
+        if not sts: return
+        try: result = json.loads(response)
+        except: return
+        if result.get('type') != 'success': return
+        episodes = self.cm.ph.getAllItemsBeetwenMarkers(result.get('html', ''), '<li', '</li>')
+        episodes.reverse()
+        for ep in episodes:
+            ep_num = self.cm.ph.getSearchGroups(ep, r'<b>(\d+)</b>')[0]
+            if not ep_num: continue
+            ep_url = self.cm.ph.getSearchGroups(ep, r'href="([^"]+)"')[0]
+            if not ep_url: continue
+            if '/watch/' not in ep_url: ep_url += 'watch/'
+            self.addVideo({'title': u'الحلقة %s' % ep_num,'url': ep_url,'mode': '22','hst': 'tshost'})
+
     def get_links(self, cItem):
         urlTab = []
-        if config.plugins.iptvplayer.ts_dsn.value:
-            urlTab = self.cacheLinks.get(str(cItem['url']), [])
-            if urlTab:
-                return urlTab
         url = cItem['url']
-        sts, data = self.getPage(url)
-        if not sts:
+        if not url: return []
+        # ===== IMDb DIRECT =====
+        if 'imdb.com/video/' in url:
+            printDBG("Detected IMDb trailer")
+            return self.getIMDBTrailer(url)
+        # ===== YOUTUBE DIRECT =====
+        if 'youtube.com' in url or 'youtu.be' in url:
+            urlTab.append({'name': 'YouTube','url': url,'need_resolve': 1})
             return urlTab
-        printDBG('get_links - Processing page for servers')
-        watch_url = None
-        watch_patterns = [
-            r'href="([^"]*watch[^"]*)"',
-            r'href="([^"]*/watch/)"',
-            r'<a[^>]*class="[^"]*watch[^"]*"[^>]*href="([^"]*)"',
-            r'<a[^>]*href="([^"]*)"[^>]*class="[^"]*watch[^"]*"'
-        ]
-        for pattern in watch_patterns:
-            watch_match = re.search(pattern, data, re.I)
-            if watch_match:
-                watch_url = watch_match.group(1)
-                if not watch_url.startswith('http'):
-                    watch_url = self.MAIN_URL + watch_url
-                break
-        if not watch_url:
-            if '/watch/' not in url:
-                watch_url = url + '/watch/' if not url.endswith('/') else url + 'watch/'
-            else:
-                watch_url = url
-        printDBG('get_links - Watch URL: {}'.format(watch_url))
-        sts, watch_data = self.getPage(watch_url)
-        if not sts:
-            urlTab.append({'name': 'مشاهدة', 'url': watch_url, 'need_resolve': 1})
-            return urlTab
-        printDBG('get_links - Watch page data length: {}'.format(len(watch_data)))
-        post_id = None
-        post_id_match = re.search(r'data-post="(\d+)"', watch_data)
-        if post_id_match:
-            post_id = post_id_match.group(1)
-            printDBG('get_links - Found post ID: {}'.format(post_id))
-        csrf_token = self.extract_csrf_token(watch_data)
-        printDBG('get_links - Found CSRF token: {}'.format(csrf_token))
-        qualities = self.extract_qualities(watch_data)
-        printDBG('get_links - Found qualities: {}'.format(qualities))
-        servers_list = self.extract_servers(watch_data)
-        printDBG('get_links - Found {} servers'.format(len(servers_list)))
+        if '/watch/' not in url: url = url.rstrip('/') + '/watch/'
+        sts, watch_data = self.getPage(url)
+        if not sts: return urlTab
+        printDBG('get_links - Watch page loaded')
+        servers_pattern = r'data-qu="(\d+)"[^>]+data-link="([^"]+)"[^>]*>\s*<i[^>]*></i>\s*<span>([^<]+)</span>'
+        servers = re.findall(servers_pattern, watch_data, re.S)
+        server_domains = {}
+        for quality, link, name in servers:
+            if 'عرب' in name and quality == '480': continue
+            try:
+                encoded = re.search(r'(?:url=|id=)([A-Za-z0-9+/=]+)', link).group(1)
+                padding = 4 - len(encoded) % 4
+                if padding != 4: encoded += '=' * padding
+                video_url = base64.b64decode(encoded).decode('utf-8')
+            except:
+                video_url = self.MAIN_URL + link if link.startswith('/') else link
+            domain_match = re.search(r'https?://([^/]+)', video_url)
+            if domain_match:
+                domain = domain_match.group(1)
+                server_id = name.strip()
+                if server_id not in ['سيرفر عرب سيد']:
+                    server_domains[server_id] = domain
+        post_id = self.cm.ph.getSearchGroups(watch_data, r"psot_id['\s:]+['\"](\d+)")[0] or \
+                  self.cm.ph.getSearchGroups(watch_data, r"post_id['\s:]+['\"](\d+)")[0]
+        csrf_token = self.cm.ph.getSearchGroups(watch_data, r"csrf__token['\"]:\s*['\"]([^'\"]+)")[0]
+        printDBG('get_links - post_id: {}, csrf_token: {}'.format(post_id, csrf_token))
         if post_id and csrf_token:
-            for quality in qualities:
-                if quality in ['720', '1080']:
-                    printDBG('get_links - Fetching servers for quality {} via AJAX'.format(quality))
-                    quality_servers = self.get_quality_servers_ajax(post_id, quality, csrf_token)
-                    if quality_servers:
-                        for server in quality_servers:
-                            full_url = self.process_server_link(server['link'])
-                            label = '[{}] {}'.format(quality + 'p', server['name'])
-                            urlTab.append({'name': label, 'url': full_url, 'need_resolve': 1})
-                            printDBG('get_links - Added quality server: {}'.format(label))
-        if not urlTab:
-            printDBG('get_links - Using servers with all qualities')
-            for server in servers_list:
-                for quality in qualities:
-                    if post_id and csrf_token:
-                        watch_link = self.get_watch_link_ajax(post_id, quality, server['server_id'], csrf_token)
-                        if watch_link:
-                            full_url = self.process_server_link(watch_link)
-                            label = '[{}] {}'.format(quality + 'p', server['name'])
-                            urlTab.append({'name': label, 'url': full_url, 'need_resolve': 1})
-                            printDBG('get_links - Added server with quality: {}'.format(label))
-                            continue
-                    if quality == '480':
-                        full_url = self.process_server_link(server['link'])
-                        label = '[{}] {}'.format(quality + 'p', server['name'])
-                        urlTab.append({'name': label, 'url': full_url, 'need_resolve': 1})
-                        printDBG('get_links - Added default server: {}'.format(label))
-        if not urlTab:
-            printDBG('get_links - Using fallback method')
-            asd_links = re.findall(r'https?://[^"\']*asd\.php\?url=[^"\']+', watch_data)
-            for asd_link in asd_links:
-                printDBG('get_links - Found ASD link: {}'.format(asd_link))
-                sts, asd_data = self.getPage(asd_link)
-                if sts:
-                    iframe_match = re.search(r'<iframe[^>]+src="([^"]+)"', asd_data)
-                    if iframe_match:
-                        iframe_url = iframe_match.group(1)
-                        printDBG('get_links - Extracted iframe URL: {}'.format(iframe_url))
-                        urlTab.append({'name': '[480p] Direct iframe', 'url': iframe_url, 'need_resolve': 1})
-        unique_servers = {}
-        for server in urlTab:
-            key = server['name'] + server['url']
-            if key not in unique_servers:
-                unique_servers[key] = server
-        urlTab = list(unique_servers.values())
-        def quality_sort(item):
+            for quality in ['1080', '720', '480']:
+                for server_id in range(0, 6):
+                    server_url = self.get_server_link(post_id, quality, server_id, csrf_token, url)
+                    if server_url:
+                        if server_id == 0:
+                            server_name = 'سيرفر عرب سيد'
+                            domain_name = 'm.reviewrate.net'
+                        else:
+                            server_name = 'سيرفر {}'.format(server_id)
+                            domain_match = re.search(r'https?://([^/]+)', server_url)
+                            domain_name = domain_match.group(1) if domain_match else 'unknown'
+                            if server_name in server_domains:
+                                domain_name = server_domains[server_name]
+                        if server_id == 0:
+                            label = '[{}P] {}'.format(quality, server_name)
+                        else:
+                            label = '[{}P] {} - {}'.format(quality, server_name, domain_name)
+                        urlTab.append({'name': label, 'url': server_url, 'need_resolve': 1})
+                        printDBG('get_links - Added: {}'.format(label))
+        def sort_key(item):
             name = item['name']
-            if '1080' in name:
-                return 3
-            elif '720' in name:
-                return 2
-            elif '480' in name:
-                return 1
-            else:
-                return 0
-        urlTab.sort(key=quality_sort, reverse=True)
-        printDBG('get_links - Total unique servers found: {}'.format(len(urlTab)))
-        for server in urlTab:
-            printDBG('get_links - Server: {} -> {}'.format(server['name'], server['url']))
-        if urlTab and config.plugins.iptvplayer.ts_dsn.value:
-            self.cacheLinks[str(cItem['url'])] = urlTab
+            if '1080' in name and 'عرب سيد' in name: return 10
+            elif '720' in name and 'عرب سيد' in name: return 9
+            elif '480' in name and 'عرب سيد' in name: return 8
+            elif '1080' in name: return 7
+            elif '720' in name: return 6
+            else: return 5
+        urlTab.sort(key=sort_key, reverse=True)
+        printDBG('get_links - Total servers found: {}'.format(len(urlTab)))
         return urlTab
-    def extract_qualities(self, data):
-        """استخراج الجودات المتاحة من الصفحة"""
-        qualities = []
-        qualities_section = re.search(r'<ul class="qualities__list">(.*?)</ul>', data, re.S)
-        if qualities_section:
-            qualities = re.findall(r'data-quality="([^"]*)"', qualities_section.group(1))
-        if not qualities:
-            qualities = re.findall(r'data-quality="([^"]*)"', data)
-        filtered_qualities = []
-        for q in qualities:
-            if q in ['480', '720', '1080']:
-                filtered_qualities.append(q)
-        filtered_qualities = list(set(filtered_qualities))
-        if not filtered_qualities:
-            filtered_qualities = ['480', '720', '1080']
-        return filtered_qualities
-    def extract_servers(self, data):
-        """استخراج السيرفرات من الصفحة"""
-        servers_list = []
-        servers_section = re.search(r'<ul class="d__flex gap__20 flex__wrap[^>]*>(.*?)</ul>', data, re.S)
-        if servers_section:
-            servers = re.findall(r'data-post="[^"]*"\s+data-server="([^"]*)"\s+data-qu="([^"]*)"\s+data-link="([^"]*)"[^>]*>\s*<i[^>]*></i>\s*<span>([^<]*)</span>', servers_section.group(1), re.S)
-            for server_id, quality, server_link, server_name in servers:
-                servers_list.append({
-                    'server_id': server_id,
-                    'quality': quality.strip() if quality.strip() else '480',
-                    'link': server_link,
-                    'name': ph.clean_html(server_name).strip()
-                })
-        return servers_list
-    def extract_csrf_token(self, data):
-        """استخراج CSRF token من الصفحة"""
-        patterns = [
-            r"csrf__token['\"]?\s*:\s*['\"]([^'\"]+)",
-            r"<meta[^>]*name=['\"]csrf-token['\"][^>]*content=['\"]([^'\"]+)",
-            r"<input[^>]*name=['\"]csrf_token['\"][^>]*value=['\"]([^'\"]+)",
-            r"<input[^>]*name=['\"]_token['\"][^>]*value=['\"]([^'\"]+)",
-            r"csrf_token['\"]?\s*:\s*['\"]?([^'\"\s]+)",
-            r"_token['\"]?\s*:\s*['\"]?([^'\"\s]+)",
-        ]
-        for pattern in patterns:
-            match = re.search(pattern, data)
-            if match:
-                token = match.group(1)
-                printDBG('extract_csrf_token - Found token via pattern: {}'.format(pattern))
-                return token
-        printDBG('extract_csrf_token - No token found, using fallback value')
-        return '5408486120'
-    def get_quality_servers_ajax(self, post_id, quality, csrf_token):
-        """الحصول على السيرفرات لجودة محددة عبر AJAX"""
-        servers = []
-        post_data = {
-            'post_id': post_id,
-            'quality': quality
-        }
-        ajax_url = self.MAIN_URL + '/get__quality__servers/'
-        headers = self.HEADER.copy()
-        headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-        headers['X-Requested-With'] = 'XMLHttpRequest'
-        headers['Referer'] = self.MAIN_URL
-        printDBG('get_quality_servers_ajax - Sending request to: {}'.format(ajax_url))
-        params = self.defaultParams.copy()
-        params['header'] = headers
-        sts, response = self.getPage(ajax_url, params, post_data)
-        if sts and response:
-            try:
-                data = json.loads(response)
-                if data.get('type') == 'success':
-                    html_content = data.get('html', '')
-                    servers_data = re.findall(r'data-post="[^"]*"\s+data-server="([^"]*)"\s+data-qu="([^"]*)"\s+data-link="([^"]*)"[^>]*>\s*<i[^>]*></i>\s*<span>([^<]*)</span>', html_content, re.S)
-                    for server_id, server_quality, server_link, server_name in servers_data:
-                        servers.append({'server_id': server_id,'quality': server_quality,'link': server_link,'name': ph.clean_html(server_name).strip()})
-                    printDBG('get_quality_servers_ajax - Found {} servers for quality {}'.format(len(servers), quality))
-            except Exception as e:
-                printDBG('get_quality_servers_ajax - Error: {}'.format(str(e)))
-        return servers
-    def get_watch_link_ajax(self, post_id, quality, server_id, csrf_token):
-        """الحصول على رابط المشاهدة عبر AJAX"""
-        post_data = 'post_id={}&quality={}&server={}&csrf_token={}'.format(
-            post_id, quality, server_id, csrf_token
-        ).encode('utf-8')
-        ajax_url = self.MAIN_URL + '/get__watch__server/'
-        headers = self.HEADER.copy()
-        headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-        headers['X-Requested-With'] = 'XMLHttpRequest'
-        headers['Referer'] = self.MAIN_URL
-        printDBG('get_watch_link_ajax - Sending request for quality {} server {}'.format(quality, server_id))
-        params = self.defaultParams.copy()
-        params['header'] = headers
-        params['raw_post_data'] = True
-        sts, response = self.getPage(ajax_url, params, post_data)
-        if sts and response:
-            try:
-                data = json.loads(response)
-                if data.get('type') == 'success':
-                    watch_link = data.get('server')
-                    printDBG('get_watch_link_ajax - Found watch link: {}'.format(watch_link))
-                    return watch_link
-                else:
-                    printDBG('get_watch_link_ajax - Server responded but not success: {}'.format(data))
-            except Exception as e:
-                printDBG('get_watch_link_ajax - JSON parse error: {}'.format(str(e)))
-        else:
-            printDBG('get_watch_link_ajax - Request failed (sts={}, len={})'.format(sts, len(response) if response else 0))
+    def get_server_link(self, post_id, quality, server_id, csrf_token, referer):
+        """استخراج رابط سيرفر معين لجودة معينة - مع تحسينات السرعة"""
+        try:
+            ajax_url = 'https://asd.pics/get__watch__server/'
+            post_data = {'post_id': post_id,'quality': quality,'server': server_id,'csrf_token': csrf_token}
+            headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Referer': referer,
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'
+            }
+            params = self.defaultParams.copy()
+            params['header'] = headers
+            params['timeout'] = 7
+            params['connect_timeout'] = 3
+            printDBG('get_server_link - Fetching server {} quality {}...'.format(server_id, quality))
+            sts, response = self.cm.getPage(ajax_url, params, post_data)
+            if sts and response:
+                try:
+                    res = json.loads(response)
+                    if res.get('type') == 'success' and res.get('server'):
+                        server_url = res['server']
+                        if 'url=' in server_url or 'id=' in server_url:
+                            try:
+                                encoded = re.search(r'(?:url=|id=)([A-Za-z0-9+/=]+)', server_url).group(1)
+                                padding = 4 - len(encoded) % 4
+                                if padding != 4: encoded += '=' * padding
+                                server_url = base64.b64decode(encoded).decode('utf-8')
+                            except: pass
+                        return server_url
+                except: pass
+        except Exception as e: printDBG('get_server_link - Error: {}'.format(str(e)))
         return None
-    def process_server_link(self, server_link):
-        """معالجة رابط السيرفر"""
-        if server_link.startswith('/asd.php?url='):
-            try:
-                encoded_part = server_link.split('url=')[1]
-                padding = 4 - len(encoded_part) % 4
-                if padding != 4:
-                    encoded_part += '=' * padding
-                decoded_url = base64.b64decode(encoded_part).decode('utf-8')
-                return decoded_url
-            except Exception as e:
-                printDBG('process_server_link - Base64 decode error: {}'.format(str(e)))
-                return self.MAIN_URL + server_link
-        elif server_link.startswith('/'):
-            return self.MAIN_URL + server_link
-        elif not server_link.startswith('http'):
-            return self.MAIN_URL + '/' + server_link
-        else:
-            return server_link        
     def getVideos(self, videoUrl):
-        urlTab = []
         printDBG('getVideos - Processing: {}'.format(videoUrl))
-        if '/asd.php?url=' in videoUrl:
-            try:
-                encoded_part = videoUrl.split('url=')[1]
-                decoded_url = base64.b64decode(encoded_part).decode('utf-8')
-                printDBG('getVideos - Decoded URL: {}'.format(decoded_url))
-                if decoded_url.startswith('http'):
-                    urlTab.append((decoded_url, '1'))
-                else:
-                    urlTab.append((decoded_url, '1'))
-            except Exception as e:
-                printDBG('getVideos - Base64 decode error: {}'.format(str(e)))
-                urlTab.append((videoUrl, '1'))
-        elif any(domain in videoUrl for domain in ['voe.sx', 'filemoon.sx', 'bigwarp.pro', 'savefiles.com', 'gamehub.com']):
-            urlTab.append((videoUrl, '1'))
-        elif '/watch/' in videoUrl or 'embed' in videoUrl:
-            urlTab.append((videoUrl, '1'))
-        else:
-            urlTab.append((videoUrl, '1' if any(x in videoUrl for x in ['.mp4', '.m3u8']) else '0'))
-        return urlTab
+        try: return self.up.getVideoLinkExt(videoUrl)
+        except Exception as e:
+            printDBG('getVideos - Resolver error: {}'.format(str(e)))
+            return []
+    # ==========================================
+    # IMDb Trailer Resolver
+    # ==========================================
+    def getIMDBTrailer(self, url):
+        printDBG('IMDB resolver start >>> %s' % url)
+        links = []
+        vid = self.cm.ph.getSearchGroups(url, r'(vi\d+)')[0]
+        if not vid:
+            printDBG('IMDB: video id not found')
+            return []
+        embed_url = 'https://www.imdb.com/video/embed/%s/' % vid
+        printDBG('IMDB embed URL >>> %s' % embed_url)
+        sts, data = self.getPage(embed_url)
+        if not sts:
+            printDBG('IMDB: failed to load embed page')
+            return []
+        json_data = self.cm.ph.getSearchGroups(data,r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>')[0]
+        if not json_data:
+            printDBG('IMDB: __NEXT_DATA__ not found')
+            return []
+        try:
+            json_data = json.loads(json_data)
+            videoData = json_data['props']['pageProps'].get('videoEmbedPlaybackData')
+            if not videoData:
+                printDBG('IMDB: videoEmbedPlaybackData not found')
+                return []
+            qualities = []
+            for item in videoData.get('playbackURLs', []):
+                mime = item.get('videoMimeType', '').lower()
+                video_url = item.get('url')
+                if not video_url: continue
+                if mime != 'mp4': continue
+                display = item.get('displayName', {})
+                quality_txt = display.get('value', '')
+                try: quality = int(quality_txt.replace('p', '').strip())
+                except: continue
+                qualities.append({'q': quality,'name': 'IMDb %dp' % quality,'url': video_url,'need_resolve': 0})
+            qualities.sort(key=lambda x: x['q'], reverse=True)
+            for q in qualities:
+                links.append({'name': q['name'],'url': q['url'],'need_resolve': 0})
+        except Exception as e:
+            printDBG('IMDB extraction error: %s' % e)
+        return links
+
     def getArticle(self, cItem):
         otherInfo1 = {}
         desc = cItem['desc']
@@ -548,18 +633,13 @@ class TSIPHost(TSCBaseHostClass):
         mode = cItem.get('mode', None)
         printDBG('Arabseed start mode = %s' % mode)
         printDBG('cItem: %s' % str(cItem))
-        if mode == '10':
-            self.showmenu1(cItem)
-        elif mode == '20':
-            self.showitms(cItem)
-        elif mode == '21':
-            self.showelms(cItem)
-        elif mode == '22':
-            return self.get_links(cItem)
-        elif mode == '50':
-            self.showsearch(cItem)
-        elif mode == '51':
-            self.SearchResult(cItem.get('search_pattern', ''), cItem.get('page', 1), cItem.get('import', ''))
-        else:
-            self.showmenu(cItem)
+        if mode == '10': self.showmenu1(cItem)
+        elif mode == '20': self.showitms(cItem)
+        elif mode == '21': self.showelms(cItem)
+        elif mode == '22': return self.get_links(cItem)
+        elif mode == '23': return self.listSeasons(cItem)
+        elif mode == '24': return self.listEpisodes(cItem)
+        elif mode == '50': self.showsearch(cItem)
+        elif mode == '51': self.SearchResult(cItem.get('search_pattern', ''), cItem.get('page', 1), cItem.get('import', ''))
+        else: self.showmenu(cItem)
         return True
